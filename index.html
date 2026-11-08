@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta property="og:title" content="Catálogo mayorista · Inversiones M&R">
-<meta property="og:description" content="Cascos y visores al por mayor. Hacé tu pedido directo por WhatsApp.">
+<meta property="og:description" content="Cascos, visores y llantas al por mayor. Hacé tu pedido directo por WhatsApp.">
 <meta property="og:image" content="assets/logo-mr.webp">
 <link rel="icon" href="assets/logo-mr.webp">
 <title>Catálogo Cascos Speed</title>
@@ -289,6 +289,11 @@ VISORES.forEach((v, i) => {
   CATALOGO.push({ id: "V" + (i + 1), tipo: "visor", ref: "VS-" + String(i + 1).padStart(3, "0"), foto: "",
     casco: "VISORES", visor: v, spoiler: "", tallas: [], titulo: "Visor " + v, detalle: "Repuesto · visor suelto", precio: 150 });
 });
+const LLANTAS = [["L1", "100/90-17", "TL", "T-158", 1050, "assets/llantas/L1.svg"], ["L2", "2.75-18", "TT", "T-114", 670, "assets/llantas/L2.svg"], ["L3", "3.00-17", "TT", "T-115", 670, "assets/llantas/L3.svg"], ["L4", "3.00-18", "TT", "T-114", 690, "assets/llantas/L4.svg"], ["L5", "3.00-18", "TT", "T-515", 690, "assets/llantas/L5.svg"], ["L6", "4.10-18", "TT", "T-175", 875, "assets/llantas/L6.svg"], ["L7", "4.10-18", "TT", "T-515", 900, "assets/llantas/L7.svg"], ["L8", "90/90-19", "TT", "T-012", 760, "assets/llantas/L8.svg"]];
+LLANTAS.forEach((r) => {
+  CATALOGO.push({ id: r[0], tipo: "llanta", ref: "LL-00" + r[0].slice(1), foto: r[5], casco: "LLANTAS", visor: "", spoiler: "", tallas: [], medida: r[1],
+    titulo: "Llanta " + r[1], detalle: (r[2] === "TL" ? "Sin tubo (TL)" : "Con tubo (TT)") + " · Diseño " + r[3], precio: r[4], corto: "LLANTA " + r[1] + " " + r[2] + " " + r[3] });
+});
 const GRUPOS = ["TODOS"].concat(CATALOGO.map((c) => c.casco).filter((c, i, a) => a.indexOf(c) === i));
 const byId = (id) => CATALOGO.find((c) => c.id === id);
 const minCasco = Math.min(...CATALOGO.filter((c) => c.tipo === "casco").map((c) => c.precio));
@@ -346,15 +351,15 @@ function viewCatalogo() {
     const t = tallaDe(it), pend = S.sel[it.id] === "?";
     const foto = it.foto ? '<img src="' + it.foto + '" alt="' + esc(it.titulo + " " + it.detalle) + '" loading="lazy">'
       : '<div class="visor" style="background:' + fill(it.visor) + '"></div>';
-    const sizes = (it.tallas.length ? it.tallas : ["ÚNICA"]).map((s) =>
+    const sizes = (it.tallas.length ? it.tallas : [it.medida || "ÚNICA"]).map((s) =>
       '<button type="button" class="chip size' + (t === s ? " on" : "") + (pend ? " need" : "") + '"' + (it.tallas.length ? ' data-act="size:' + it.id + ':' + s + '"' : " disabled") + ">" + s + "</button>").join("");
     return '<article class="card"><div class="photo">' + foto + '<div class="ref">' + it.ref + '</div></div><div class="body">' +
       '<div><div class="title-row"><div class="ttl">' + esc(it.titulo) + '</div><div class="price">' + money(it.precio) + '</div></div><div class="det">' + esc(it.detalle) + "</div></div>" +
-      '<div class="sizes"><div class="label">' + (it.tallas.length ? (pend ? "Elegí una talla" : "Tallas disponibles") : "Talla única") + '</div><div class="row">' + sizes + "</div></div>" +
+      '<div class="sizes"><div class="label">' + (it.tallas.length ? (pend ? "Elegí una talla" : "Tallas disponibles") : it.medida ? "Medida" : "Talla única") + '</div><div class="row">' + sizes + "</div></div>" +
       '<div class="actions">' + stepHtml("qty:" + it.id + ":-1", cantDe(it), "qty:" + it.id + ":1") +
       '<button type="button" class="add' + (S.added === it.id ? " done" : "") + '" data-act="add:' + it.id + '">' + (S.added === it.id ? "✓ Agregado" : "Agregar") + "</button></div></div></article>";
   }).join("");
-  return '<div class="wrap"><section class="hero"><div class="eyebrow">Catálogo mayorista · 2026</div><div class="hero-row"><h1>Cascos y visores</h1><img class="mr" src="assets/logo-mr.webp" alt="M&amp;R Inversiones"></div>' +
+  return '<div class="wrap"><section class="hero"><div class="eyebrow">Catálogo mayorista · 2026</div><div class="hero-row"><h1>Cascos, visores y llantas</h1><img class="mr" src="assets/logo-mr.webp" alt="M&amp;R Inversiones"></div>' +
     "<p>Elegí talla y cantidad de cada modelo, agregá notas si necesitás algo específico y enviá tu pedido directo por WhatsApp a tu vendedor.</p>" +
     '<div class="stats"><div><b>' + CATALOGO.length + "</b> modelos</div><div>Cascos desde <b>" + money(minCasco) + "</b></div><div>Visores <b>" + money(150) + '</b></div><div class="stock-badge">Existencias al ' + INVENTARIO_FECHA + "</div></div></section>" +
     '<nav class="filters" aria-label="Filtrar por línea">' + GRUPOS.map((g) => '<button type="button" class="chip' + (S.grupo === g ? " on" : "") + '" data-act="grp:' + g + '">' + (g === "TODOS" ? "Todos" : g) + "</button>").join("") + "</nav>" +
@@ -363,7 +368,7 @@ function viewCatalogo() {
 
 function lineHtml(l, compact) {
   const bg = l.it.foto ? "url(" + l.it.foto + ")" : fill(l.it.casco === "VISORES" ? l.it.visor : l.it.casco);
-  const resumen = (l.talla ? "Talla " + l.talla : "Talla única") + " · x" + l.cant + " · " + money(l.sub);
+  const resumen = (l.talla ? "Talla " + l.talla : l.it.medida ? "Medida " + l.it.medida : "Talla única") + " · x" + l.cant + " · " + money(l.sub);
   return '<div class="line"><div class="line-top"><div class="sw" style="background-image:' + (l.it.foto ? bg : "none") + ";" + (l.it.foto ? "" : "background:" + bg) + '"></div>' +
     '<div class="line-info"><div class="ttl">' + esc(l.it.titulo) + '</div><div class="det">' + esc(l.it.detalle) + '</div><div class="sum">' + resumen + "</div></div>" +
     '<button type="button" class="x" aria-label="Quitar" data-act="del:' + l.key + '">✕</button></div>' +
