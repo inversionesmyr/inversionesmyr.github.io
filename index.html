@@ -289,7 +289,7 @@ VISORES.forEach((v, i) => {
   CATALOGO.push({ id: "V" + (i + 1), tipo: "visor", ref: "VS-" + String(i + 1).padStart(3, "0"), foto: "",
     casco: "VISORES", visor: v, spoiler: "", tallas: [], titulo: "Visor " + v, detalle: "Repuesto · visor suelto", precio: 150 });
 });
-const LLANTAS = [["L1", "100/90-17", "TL", "T-158", 1050, "assets/llantas/L1.svg"], ["L2", "2.75-18", "TT", "T-114", 670, "assets/llantas/L2.svg"], ["L3", "3.00-17", "TT", "T-115", 670, "assets/llantas/L3.svg"], ["L4", "3.00-18", "TT", "T-114", 690, "assets/llantas/L4.svg"], ["L5", "3.00-18", "TT", "T-515", 690, "assets/llantas/L5.svg"], ["L6", "4.10-18", "TT", "T-175", 875, "assets/llantas/L6.svg"], ["L7", "4.10-18", "TT", "T-515", 900, "assets/llantas/L7.svg"], ["L8", "90/90-19", "TT", "T-012", 760, "assets/llantas/L8.svg"]];
+const LLANTAS = [["L1", "100/90-17", "TL", "T-158", 1050, "assets/llantas/L1.webp"], ["L2", "2.75-18", "TT", "T-114", 670, "assets/llantas/L2.webp"], ["L3", "3.00-17", "TT", "T-115", 670, "assets/llantas/L3.webp"], ["L4", "3.00-18", "TT", "T-114", 690, "assets/llantas/L4.webp"], ["L5", "3.00-18", "TT", "T-515", 690, "assets/llantas/L5.webp"], ["L6", "4.10-18", "TT", "T-175", 875, "assets/llantas/L6.webp"], ["L7", "4.10-18", "TT", "T-515", 900, "assets/llantas/L7.webp"], ["L8", "90/90-19", "TT", "T-012", 760, "assets/llantas/L8.webp"]];
 LLANTAS.forEach((r) => {
   CATALOGO.push({ id: r[0], tipo: "llanta", ref: "LL-00" + r[0].slice(1), foto: r[5], casco: "LLANTAS", visor: "", spoiler: "", tallas: [], medida: r[1],
     titulo: "Llanta " + r[1], detalle: (r[2] === "TL" ? "Sin tubo (TL)" : "Con tubo (TT)") + " · Diseño " + r[3], precio: r[4], corto: "LLANTA " + r[1] + " " + r[2] + " " + r[3] });
